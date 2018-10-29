@@ -14,9 +14,10 @@ import Foundation
 public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
     private let originFrame: CGRect
-    private let transitionDuration: TimeInterval = 0.3
+    private let transitionDuration: TimeInterval = 0.4
     private let relativeDuration: TimeInterval = 1.0
     private var isDismissing: Bool
+    let interactionController: SideMenuSwipeInteractionController?
 
     /**
      * Creates UIViewControllerAnimatedTransition
@@ -24,9 +25,10 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
      *   - originFrame: Starting point of the animation
      *   - dismissing: `true` if the transition is from a dismissing `ViewController`, otherwise default `false`
      */
-    public init(originFrame: CGRect, dismissing: Bool = false) {
+    public init(originFrame: CGRect, dismissing: Bool = false, interactionController: SideMenuSwipeInteractionController? = nil) {
         self.originFrame = originFrame
         isDismissing = dismissing
+        self.interactionController = interactionController
     }
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -57,17 +59,15 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
             }
 
             containerView.addSubview(toViewController.view)
-            toViewController.view.frame.origin.x = -self.originFrame.width
+            toViewController.view.frame.origin.x = -fromViewController.view.frame.width
         }
 
         let duration = transitionDuration(using: transitionContext)
-        let animationTransition = {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: self.relativeDuration) {
-                animation()
-            }
-        }
 
         let completion: (Bool) -> Void = { (_) in
+            if transitionContext.transitionWasCancelled {
+                toViewController.view.removeFromSuperview()
+            }
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
 
@@ -75,7 +75,7 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
             withDuration: duration,
             delay: 0,
             options: .calculationModeCubic,
-            animations: animationTransition,
+            animations: animation,
             completion: completion
         )
     }

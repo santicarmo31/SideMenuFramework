@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6EB1D21F218630DD00BEE245 /* SideMenuSwipeInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB1D21E218630DD00BEE245 /* SideMenuSwipeInteractionController.swift */; };
 		96A4B55020B1E44B0038163E /* SideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96A4B54620B1E44B0038163E /* SideMenu.framework */; };
 		96A4B55520B1E44B0038163E /* SideMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A4B55420B1E44B0038163E /* SideMenuTests.swift */; };
 		96A4B55720B1E44B0038163E /* SideMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 96A4B54920B1E44B0038163E /* SideMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6EB1D21E218630DD00BEE245 /* SideMenuSwipeInteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuSwipeInteractionController.swift; sourceTree = "<group>"; };
 		96A4B54620B1E44B0038163E /* SideMenu.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideMenu.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A4B54920B1E44B0038163E /* SideMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SideMenu.h; sourceTree = "<group>"; };
 		96A4B54A20B1E44B0038163E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		96A4B54820B1E44B0038163E /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
+				6EB1D21E218630DD00BEE245 /* SideMenuSwipeInteractionController.swift */,
 				96A4B56820B1E5190038163E /* SideMenuOptions.swift */,
 				96A4B56720B1E5190038163E /* SideMenuTableViewCell.swift */,
 				96A4B56620B1E5190038163E /* SideMenuViewController.swift */,
@@ -210,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96A4B5FB20B1E92E0038163E /* SideMenuTransition.swift in Sources */,
+				6EB1D21F218630DD00BEE245 /* SideMenuSwipeInteractionController.swift in Sources */,
 				96A4B56920B1E5190038163E /* SideMenuViewController.swift in Sources */,
 				96A4B56B20B1E5190038163E /* SideMenuOptions.swift in Sources */,
 				96A4B56A20B1E5190038163E /* SideMenuTableViewCell.swift in Sources */,

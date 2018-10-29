@@ -11,31 +11,35 @@ import SideMenu
 
 class ViewController: UIViewController {
 
-    private lazy var menu: SideMenuViewController = {
+    // MARK: Vars & Constants
+    internal lazy var sideMenu: SideMenuViewController = {
         guard let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SideMenu") as? SideMenuViewController else {
             return SideMenuViewController()
         }
         menu.delegate = self
         menu.transitioningDelegate = self
+        menu.swipeInteractionController = SideMenuSwipeInteractionController(viewController: self)
         return menu
     }()
 
+    // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
+    
+    
+    // MARK: IBActions
     @IBAction func showMenu(_ sender: Any) {
-        present(menu, animated: true, completion: nil)
+        present(sideMenu, animated: true, completion: nil)
     }
 }
 
 extension ViewController: SideMenuViewControllerDelegate {
     func didSelectRow(atIndexPath indexPath: IndexPath) {
-        print("Option selected: \(menu.menuOptions[indexPath.row].title)")
+        print("Option selected: \(sideMenu.menuOptions[indexPath.row].title)")
     }
 }

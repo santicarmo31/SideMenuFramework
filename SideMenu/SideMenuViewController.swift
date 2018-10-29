@@ -9,35 +9,37 @@
 import UIKit
 
 public protocol SideMenuViewControllerDelegate: class {
+    var sideMenu: SideMenuViewController { get set }
     func didSelectRow(atIndexPath indexPath: IndexPath)
 }
 
 public class SideMenuViewController: UIViewController {
-
+    
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
-
+    
     // MARK: - Vars & Constants
-
-
+    
+    
     public var menuOptions: [SideMenuOption] = []
     public weak var delegate: SideMenuViewControllerDelegate?
+    public var swipeInteractionController: SideMenuSwipeInteractionController?
     var backView: UIView! = UIView()
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupCloseBackView()
-        setupTableView()
+        setupTableView()        
     }
-
+    
     // MARK: - Methods
-
+    
     private func setupCloseBackView() {
         backView.frame = view.frame
         view.insertSubview(backView, at: 0)
         setupCloseTapGesture()
     }
-
+    
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -45,12 +47,12 @@ public class SideMenuViewController: UIViewController {
         let nib = UINib(nibName: SideMenuTableViewCell.identifier, bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: SideMenuTableViewCell.identifier)
     }
-
+    
     private func setupCloseTapGesture() {
         let closeTapGesture = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
         backView.addGestureRecognizer(closeTapGesture)
     }
-
+    
     @objc func closeMenu() {
         dismiss(animated: true, completion: nil)
     }
@@ -62,26 +64,25 @@ extension SideMenuViewController: UITableViewDataSource {
     public func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuOptions.count
     }
-
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier)
-
+        
         guard let menuCell = cell as? SideMenuTableViewCell else {
             assertionFailure("Unexpected cell of type: \(type(of: cell))")
             return UITableViewCell()
         }
-
+        
         menuCell.setCell(data: menuOptions[indexPath.row])
         return menuCell
     }
 }
 
 // MARK: - TableView Delegate
-
 extension SideMenuViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.didSelectRow(atIndexPath: indexPath)
@@ -89,18 +90,42 @@ extension SideMenuViewController: UITableViewDelegate {
     }
 }
 
+
+// MARK: - UIViewControllerTransitioningDelegate
 extension UIViewController: UIViewControllerTransitioningDelegate {
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if presented is SideMenuViewController {            
-            return SideMenuTransition(originFrame: self.view.frame)
+        guard let vc = presented as? SideMenuViewController else {
+            return nil
         }
-        return nil
+        
+        return SideMenuTransition(originFrame: self.view.frame, interactionController: vc.swipeInteractionController)
     }
-
+    
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if dismissed is SideMenuViewController {
-            return SideMenuTransition(originFrame: self.view.frame, dismissing: true)
+        guard let vc = dismissed as? SideMenuViewController else{
+            return nil
         }
-        return nil
+        return SideMenuTransition(originFrame: self.view.frame, dismissing: true, interactionController: vc.swipeInteractionController)
+    }
+    
+    public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        guard let animator = animator as? SideMenuTransition,
+            let interactionController = animator.interactionController,
+            interactionController.interactionInProgress
+            else {
+                return nil
+        }
+        return interactionController
+    }
+    
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+            guard let animator = animator as? SideMenuTransition,
+                let interactionController = animator.interactionController,
+                interactionController.interactionInProgress
+                else {
+                    return nil
+            }
+            return interactionController
     }
 }
