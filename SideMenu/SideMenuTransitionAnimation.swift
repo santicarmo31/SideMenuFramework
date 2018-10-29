@@ -11,24 +11,24 @@ import Foundation
 /**
  * Makes a transition used in the MenuViewController
  */
-public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning {
-
-    private let originFrame: CGRect
+public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+    
     private let transitionDuration: TimeInterval = 0.4
     private let relativeDuration: TimeInterval = 1.0
     private var isDismissing: Bool
-    let interactionController: SideMenuSwipeInteractionController?
+    internal let interactionController: SideMenuShowSwipeInteractionController?
+    internal let dismissInteractionController: SideMenuDismissSwipeInteractionController?
 
-    /**
-     * Creates UIViewControllerAnimatedTransition
-     * - parameters:
-     *   - originFrame: Starting point of the animation
-     *   - dismissing: `true` if the transition is from a dismissing `ViewController`, otherwise default `false`
-     */
-    public init(originFrame: CGRect, dismissing: Bool = false, interactionController: SideMenuSwipeInteractionController? = nil) {
-        self.originFrame = originFrame
+    /// Creates a custom transition to simulate a show or hide side menu
+    ///
+    /// - Parameters:
+    ///   - dismissing: `true` if the transition is from a dismissing `ViewController`, otherwise default `false`
+    ///   - showInteractionController: Interaction controller used to handle swipe pan gesture when showing `ViewController`
+    ///   - dismissInteractionController: Interaction controller used to handle swipe pan gesture when dismissing `ViewController`
+    public init(dismissing: Bool = false, showInteractionController: SideMenuShowSwipeInteractionController? = nil, dismissInteractionController: SideMenuDismissSwipeInteractionController? = nil) {
         isDismissing = dismissing
-        self.interactionController = interactionController
+        self.interactionController = showInteractionController
+        self.dismissInteractionController = dismissInteractionController
     }
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -52,7 +52,6 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
             animation = { [weak self] in
                 self?.createHideMenuAnimation(menuViewController: fromViewController, presentingViewController: toViewController)
             }
-
         } else {
             animation = { [weak self] in
                 self?.createShowMenuAnimation(menuViewController: toViewController, presentingViewController: fromViewController)
@@ -65,9 +64,6 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
         let duration = transitionDuration(using: transitionContext)
 
         let completion: (Bool) -> Void = { (_) in
-            if transitionContext.transitionWasCancelled {
-                toViewController.view.removeFromSuperview()
-            }
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
 
@@ -87,7 +83,7 @@ public class SideMenuTransition: NSObject, UIViewControllerAnimatedTransitioning
     }
 
     private func createHideMenuAnimation(menuViewController: UIViewController, presentingViewController: UIViewController) {
-        menuViewController.view.frame.origin.x = -self.originFrame.width
+        menuViewController.view.frame.origin.x = -presentingViewController.view.frame.width        
         presentingViewController.view.alpha = 1.0
     }
 

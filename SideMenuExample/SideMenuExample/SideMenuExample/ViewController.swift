@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         }
         menu.delegate = self
         menu.transitioningDelegate = self
-        menu.swipeInteractionController = SideMenuSwipeInteractionController(viewController: self)
+        menu.swipeInteractionController = SideMenuShowSwipeInteractionController(viewController: self)
         return menu
     }()
 

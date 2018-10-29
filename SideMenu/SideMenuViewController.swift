@@ -23,13 +23,16 @@ public class SideMenuViewController: UIViewController {
     
     public var menuOptions: [SideMenuOption] = []
     public weak var delegate: SideMenuViewControllerDelegate?
-    public var swipeInteractionController: SideMenuSwipeInteractionController?
+    public var swipeInteractionController: SideMenuShowSwipeInteractionController?
+    fileprivate var swipeDismissInteractionController: SideMenuDismissSwipeInteractionController?
+    
     var backView: UIView! = UIView()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupCloseBackView()
-        setupTableView()        
+        setupTableView()
+        swipeDismissInteractionController = SideMenuDismissSwipeInteractionController(viewController: self)
     }
     
     // MARK: - Methods
@@ -98,18 +101,18 @@ extension UIViewController: UIViewControllerTransitioningDelegate {
             return nil
         }
         
-        return SideMenuTransition(originFrame: self.view.frame, interactionController: vc.swipeInteractionController)
+        return SideMenuTransitionAnimation(showInteractionController: vc.swipeInteractionController)
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let vc = dismissed as? SideMenuViewController else{
             return nil
         }
-        return SideMenuTransition(originFrame: self.view.frame, dismissing: true, interactionController: vc.swipeInteractionController)
+        return SideMenuTransitionAnimation(dismissing: true, dismissInteractionController: vc.swipeDismissInteractionController)
     }
     
     public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let animator = animator as? SideMenuTransition,
+        guard let animator = animator as? SideMenuTransitionAnimation,
             let interactionController = animator.interactionController,
             interactionController.interactionInProgress
             else {
@@ -120,8 +123,8 @@ extension UIViewController: UIViewControllerTransitioningDelegate {
     
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
         -> UIViewControllerInteractiveTransitioning? {
-            guard let animator = animator as? SideMenuTransition,
-                let interactionController = animator.interactionController,
+            guard let animator = animator as? SideMenuTransitionAnimation,
+                let interactionController = animator.dismissInteractionController,
                 interactionController.interactionInProgress
                 else {
                     return nil
