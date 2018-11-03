@@ -20,13 +20,13 @@ public class SideMenuViewController: UIViewController {
     
     // MARK: - Vars & Constants
     
-    
     public var menuOptions: [SideMenuOption] = []
-    public weak var delegate: SideMenuViewControllerDelegate?
     public var swipeInteractionController: SideMenuShowSwipeInteractionController?
+    public weak var delegate: SideMenuViewControllerDelegate?
+    
     fileprivate var swipeDismissInteractionController: SideMenuDismissSwipeInteractionController?
     
-    var backView: UIView! = UIView()
+    internal var backView: UIView! = UIView()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,12 +52,16 @@ public class SideMenuViewController: UIViewController {
     }
     
     private func setupCloseTapGesture() {
-        let closeTapGesture = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
+        let closeTapGesture = UITapGestureRecognizer(target: self, action: #selector(closeMenuWithoutCompletion))
         backView.addGestureRecognizer(closeTapGesture)
     }
     
-    @objc func closeMenu() {
+    @objc private func closeMenuWithoutCompletion() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    public func closeMenu(completion: (() -> Void)?) {
+        dismiss(animated: true, completion: completion)
     }
 }
 

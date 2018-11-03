@@ -13,25 +13,23 @@ public class SideMenuDismissSwipeInteractionController: UIPercentDrivenInteracti
     internal var interactionInProgress = false
     
     private var shouldCompleteTransition = false
+    private var progressToCompleteTransition: CGFloat = 0.3
     private weak var viewController: UIViewController!
     
     public init(viewController: UIViewController) {
         super.init()
         self.viewController = viewController
-        prepareGestureRecognizer(in: self.viewController.view)
-        wantsInteractiveStart = false
+        prepareGestureRecognizer(in: self.viewController.view)        
     }
     
     private func prepareGestureRecognizer(in view: UIView) {
-        let gesture = UIScreenEdgePanGestureRecognizer(target: self,
-                                                       action: #selector(handleGesture(_:)))        
-        gesture.edges = .right
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(_:)))        
         view.addGestureRecognizer(gesture)
     }
     
     @objc func handleGesture(_ gestureRecognizer: UIScreenEdgePanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: gestureRecognizer.view!.superview!)
-        let translationProgress: CGFloat = abs((translation.x / viewController.view.frame.width))
+        let translationProgress: CGFloat = -(translation.x / viewController.view.frame.width)
         let progress = CGFloat(fminf(fmaxf(Float(translationProgress), 0.0), 1.0))
         
         switch gestureRecognizer.state {
@@ -39,7 +37,7 @@ public class SideMenuDismissSwipeInteractionController: UIPercentDrivenInteracti
             interactionInProgress = true
             viewController.dismiss(animated: true, completion: nil)
         case .changed:
-            shouldCompleteTransition = progress > 0.3
+            shouldCompleteTransition = progress > progressToCompleteTransition
             update(translationProgress)
         case .cancelled:
             interactionInProgress = false

@@ -12,10 +12,15 @@ import SideMenu
 class ViewController: UIViewController {
 
     // MARK: Vars & Constants
+    private var menuOptions: [SideMenuOption] = [
+        MenuOption(title: "Players"), MenuOption(title: "Options")
+    ]
+    
     internal lazy var sideMenu: SideMenuViewController = {
         guard let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SideMenu") as? SideMenuViewController else {
             return SideMenuViewController()
         }
+        menu.menuOptions = menuOptions
         menu.delegate = self
         menu.transitioningDelegate = self
         menu.swipeInteractionController = SideMenuShowSwipeInteractionController(viewController: self)
@@ -40,6 +45,9 @@ class ViewController: UIViewController {
 
 extension ViewController: SideMenuViewControllerDelegate {
     func didSelectRow(atIndexPath indexPath: IndexPath) {
-        print("Option selected: \(sideMenu.menuOptions[indexPath.row].title)")
+        sideMenu.closeMenu {
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController")
+            self.present(viewController, animated: true, completion: nil)
+        }
     }
 }

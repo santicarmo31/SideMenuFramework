@@ -13,8 +13,7 @@ import Foundation
  */
 public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
     
-    private let transitionDuration: TimeInterval = 0.4
-    private let relativeDuration: TimeInterval = 1.0
+    private let transitionDuration: TimeInterval = 0.6
     private var isDismissing: Bool
     internal let interactionController: SideMenuShowSwipeInteractionController?
     internal let dismissInteractionController: SideMenuDismissSwipeInteractionController?
@@ -46,7 +45,7 @@ public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTran
 
         let containerView = transitionContext.containerView
 
-        var animation: (() -> Void)!
+        var animation: (() -> Void)
 
         if isDismissing {
             animation = { [weak self] in
@@ -66,11 +65,11 @@ public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTran
         let completion: (Bool) -> Void = { (_) in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
-
-        UIView.animateKeyframes(
+        
+        UIView.animate(
             withDuration: duration,
             delay: 0,
-            options: .calculationModeCubic,
+            options: .curveEaseInOut,
             animations: animation,
             completion: completion
         )
