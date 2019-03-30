@@ -13,7 +13,7 @@ public protocol SideMenuViewControllerDelegate: class {
     func didSelectRow(atIndexPath indexPath: IndexPath)
 }
 
-public class SideMenuViewController: UIViewController {
+open class SideMenuViewController: UIViewController {
     
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
@@ -28,7 +28,7 @@ public class SideMenuViewController: UIViewController {
     
     internal var backView: UIView! = UIView()
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         setupCloseBackView()
         setupTableView()

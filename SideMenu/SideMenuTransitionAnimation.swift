@@ -11,7 +11,8 @@ import Foundation
 /**
  * Makes a transition used in the MenuViewController
  */
-public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+
+class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
     
     private let transitionDuration: TimeInterval = 0.6
     private var isDismissing: Bool
@@ -24,17 +25,17 @@ public class SideMenuTransitionAnimation: NSObject, UIViewControllerAnimatedTran
     ///   - dismissing: `true` if the transition is from a dismissing `ViewController`, otherwise default `false`
     ///   - showInteractionController: Interaction controller used to handle swipe pan gesture when showing `ViewController`
     ///   - dismissInteractionController: Interaction controller used to handle swipe pan gesture when dismissing `ViewController`
-    public init(dismissing: Bool = false, showInteractionController: SideMenuShowSwipeInteractionController? = nil, dismissInteractionController: SideMenuDismissSwipeInteractionController? = nil) {
+    init(dismissing: Bool = false, showInteractionController: SideMenuShowSwipeInteractionController? = nil, dismissInteractionController: SideMenuDismissSwipeInteractionController? = nil) {
         isDismissing = dismissing
         self.interactionController = showInteractionController
         self.dismissInteractionController = dismissInteractionController
     }
 
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return transitionDuration
     }
 
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 
         // Gets the viewController to present
         guard let fromViewController = transitionContext.viewController(forKey: .from),
