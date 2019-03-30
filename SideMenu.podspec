@@ -77,8 +77,10 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  #s.source       = { :git => "http://EXAMPLE/SideMenu.git", :tag => "#{s.version}" }
-  s.source       = { :path => '.' }
+  s.source       = { :git => "URL", :tag => "1.0.0" }
+
+  # Below is used for develop
+  #s.source       = { :path => '.' }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -131,5 +133,7 @@ Pod::Spec.new do |s|
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
+
+  s.swift_version = "4.2" 
 
 end
